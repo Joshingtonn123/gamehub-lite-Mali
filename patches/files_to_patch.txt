@@ -1,7 +1,6 @@
 AndroidManifest.xml
 apktool.yml
 original/AndroidManifest.xml
-res/drawable-xxhdpi/wine_game_loading.jpg
 res/layout/activity_button_setting.xml
 res/layout/comm_dialog_confirm_dialog.xml
 res/layout/comm_dialog_fragment.xml

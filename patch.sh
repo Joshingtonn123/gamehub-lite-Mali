@@ -33,24 +33,18 @@ KEY_ALIAS="${KEY_ALIAS:-androiddebugkey}"
 # Release mode: set RELEASE=true to build all package variants
 RELEASE="${RELEASE:-false}"
 
-# Version for output filenames (set to 1.0 Alpha for Gamehub Mali+)
-VERSION="${VERSION:-1.0-Alpha}"
+# Version for output filenames (set to 5.1.0-mali for Gamehub Lite Mali)
+VERSION="${VERSION:-5.1.0-mali}"
 
 # Base package name used in patches
 BASE_PACKAGE="gamehub.lite"
 
-# Variant definitions as space-separated pairs: "name:package"
-# Multi-variant build creates performance-whitelisted packages for Mali / MediaTek / Exynos
-VARIANTS="normal:com.Gamehub.Mali antutu:com.antutu.ABenchMark alt-antutu:com.antutu.benchmark.full genshin:com.miHoYo.GenshinImpact"
+# Package spoofing variants for Mali / MediaTek / Exynos thermal & governor bypass
+VARIANTS="base:gamehub.lite ludashi:com.ludashi.benchmark antutu:com.antutu.benchmark genshin:com.mihoyo.genshinimpact"
 
 # Get package name for a variant
 get_variant_package() {
     local variant="$1"
-    if [ "$variant" = "base" ]; then
-        variant="normal"
-    elif [ "$variant" = "alt_antutu" ]; then
-        variant="alt-antutu"
-    fi
     for pair in $VARIANTS; do
         local name="${pair%%:*}"
         local package="${pair#*:}"
@@ -59,12 +53,12 @@ get_variant_package() {
             return 0
         fi
     done
-    echo ""
+    echo "gamehub.lite"
 }
 
 # Source APK (can be overridden)
 SOURCE_APK="${1:-$SCRIPT_DIR/apk/GameHub-5.1.0.apk}"
-OUTPUT_APK="$OUTPUT_DIR/Gamehub-Mali-Plus.apk"
+OUTPUT_APK="$OUTPUT_DIR/Gamehub-Lite-Mali.apk"
 
 print_step() {
     echo -e "${BLUE}==>${NC} $1"
@@ -94,49 +88,57 @@ get_apktool_version() {
     run_apktool --version 2>/dev/null | head -1 | tr -d '\r'
 }
 
-# Extract version and enforce 1.0 Alpha
+# Extract version
 extract_version() {
-    VERSION="${VERSION:-1.0-Alpha}"
+    VERSION="${VERSION:-5.1.0-mali}"
     if [ -f "$WORK_DIR/decompiled/apktool.yml" ]; then
-        sed -i.bak "s/versionName:.*/versionName: '1.0 Alpha'/g" "$WORK_DIR/decompiled/apktool.yml"
+        sed -i.bak "s/versionName:.*/versionName: '5.1.0-mali'/g" "$WORK_DIR/decompiled/apktool.yml"
         rm -f "$WORK_DIR/decompiled/apktool.yml.bak"
     fi
-    print_success "Version: $VERSION (1.0 Alpha)"
+    print_success "Version: $VERSION"
 }
 
-# Replace package name in AndroidManifest.xml for a variant
+# Apply package spoofing cleanly for a variant
 replace_package_name() {
     local target_package="$1"
     local manifest="$WORK_DIR/decompiled/AndroidManifest.xml"
+    local apktool_cfg="$WORK_DIR/decompiled/apktool.yml"
 
-    if [ "$target_package" = "$BASE_PACKAGE" ]; then
+    if [ -z "$target_package" ] || [ "$target_package" = "$BASE_PACKAGE" ]; then
         return 0
     fi
 
-    print_step "Replacing package name: $BASE_PACKAGE -> $target_package"
+    print_step "Applying package spoof: $BASE_PACKAGE -> $target_package"
 
-    # Replace all occurrences of base package with target package
-    # This handles:
-    # - package="gamehub.lite"
-    # - android:authorities="gamehub.lite.xxx"
-    # - android:name="gamehub.lite.xxx"
-    # - action android:name="gamehub.lite.xxx"
-    sed -i.bak "s/${BASE_PACKAGE}/${target_package}/g" "$manifest"
+    # Only replace the root manifest tag package attribute: package="gamehub.lite"
+    sed -i.bak "s/package=\"${BASE_PACKAGE}\"/package=\"${target_package}\"/g" "$manifest"
     rm -f "$manifest.bak"
 
-    print_success "Package name replaced"
+    # Also configure apktool.yml renameManifestPackage if supported
+    if [ -f "$apktool_cfg" ]; then
+        if grep -q "renameManifestPackage:" "$apktool_cfg"; then
+            sed -i.bak "s/renameManifestPackage:.*/renameManifestPackage: '${target_package}'/g" "$apktool_cfg"
+            rm -f "$apktool_cfg.bak"
+        fi
+    fi
+
+    print_success "Package spoof applied: $target_package"
 }
 
-# Restore original AndroidManifest.xml from backup
+# Restore original files from backup
 restore_manifest() {
     if [ -f "$WORK_DIR/decompiled/AndroidManifest.xml.original" ]; then
         cp "$WORK_DIR/decompiled/AndroidManifest.xml.original" "$WORK_DIR/decompiled/AndroidManifest.xml"
     fi
+    if [ -f "$WORK_DIR/decompiled/apktool.yml.original" ]; then
+        cp "$WORK_DIR/decompiled/apktool.yml.original" "$WORK_DIR/decompiled/apktool.yml"
+    fi
 }
 
-# Backup original AndroidManifest.xml
+# Backup original files before variant spoofing
 backup_manifest() {
     cp "$WORK_DIR/decompiled/AndroidManifest.xml" "$WORK_DIR/decompiled/AndroidManifest.xml.original"
+    cp "$WORK_DIR/decompiled/apktool.yml" "$WORK_DIR/decompiled/apktool.yml.original"
 }
 
 # Get output filename for a variant
@@ -144,13 +146,9 @@ get_output_filename() {
     local variant="$1"
 
     if [ "$variant" = "base" ] || [ "$variant" = "normal" ]; then
-        if [ "$RELEASE" = "true" ]; then
-            echo "$OUTPUT_DIR/Gamehub-Mali-Plus-v${VERSION}.apk"
-        else
-            echo "$OUTPUT_DIR/Gamehub-Mali-Plus.apk"
-        fi
+        echo "$OUTPUT_DIR/Gamehub-Lite-Mali.apk"
     else
-        echo "$OUTPUT_DIR/Gamehub-Mali-Plus-v${VERSION}-${variant}.apk"
+        echo "$OUTPUT_DIR/Gamehub-Lite-Mali-spoofed-${variant}.apk"
     fi
 }
 
@@ -566,36 +564,30 @@ sign_apk() {
     print_success "APK signed: $(basename "$target_apk")"
 }
 
-# Build a single variant
+# Build a single spoofed variant
 build_variant() {
     local variant="$1"
     local package=$(get_variant_package "$variant")
     local output_apk=$(get_output_filename "$variant")
 
     echo ""
-    echo -e "${BLUE}--- Building variant: $variant (package: $package) ---${NC}"
+    echo -e "${BLUE}--- Building spoofed variant: $variant (package: $package) ---${NC}"
 
-    # Restore manifest and replace package if not base
+    # Restore clean base manifest & config
     restore_manifest
     replace_package_name "$package"
 
-    # Rebuild
-    rebuild_apk
-    align_apk
-    sign_apk "$output_apk"
-
-    # For normal/base variant, ensure Gamehub-Mali-Plus.apk and versioned normal are also created
-    if [ "$variant" = "base" ] || [ "$variant" = "normal" ]; then
-        cp -f "$output_apk" "$OUTPUT_DIR/Gamehub-Mali-Plus.apk" 2>/dev/null || true
-        cp -f "$output_apk" "$OUTPUT_DIR/Gamehub-Mali-Plus-v${VERSION}-normal.apk" 2>/dev/null || true
-    fi
-
-    # Track built APKs (newline separated)
-    if [ -z "$BUILT_APKS" ]; then
-        BUILT_APKS="$output_apk"
-    else
-        BUILT_APKS="$BUILT_APKS
+    # Rebuild, align, sign
+    if rebuild_apk && align_apk && sign_apk "$output_apk"; then
+        print_success "Spoofed variant $variant generated: $(basename "$output_apk")"
+        if [ -z "$BUILT_APKS" ]; then
+            BUILT_APKS="$output_apk"
+        else
+            BUILT_APKS="$BUILT_APKS
 $output_apk"
+        fi
+    else
+        print_warning "Failed to build spoofed variant $variant, skipping"
     fi
 }
 
@@ -610,13 +602,13 @@ cleanup() {
 show_result() {
     echo ""
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}  Gamehub Mali+ build complete!${NC}"
+    echo -e "${GREEN}  Gamehub Lite Mali build complete!${NC}"
     echo -e "${GREEN}========================================${NC}"
     echo ""
 
     if [ "$RELEASE" = "true" ]; then
         local count=$(echo "$BUILT_APKS" | wc -l | tr -d ' ')
-        echo "Built $count APK variant(s):"
+        echo "Built $count APK artifact(s):"
         echo ""
         echo "$BUILT_APKS" | while IFS= read -r apk; do
             if [ -n "$apk" ] && [ -f "$apk" ]; then
@@ -643,12 +635,12 @@ BUILT_APKS=""
 main() {
     echo ""
     echo "====================================="
-    echo "  Gamehub Mali+ Patcher v1.0 Alpha"
+    echo "  Gamehub Lite Mali Patcher"
     echo "====================================="
     echo ""
 
     if [ "$RELEASE" = "true" ]; then
-        echo -e "${YELLOW}RELEASE MODE: Building all variants${NC}"
+        echo -e "${YELLOW}RELEASE MODE: Building primary APK and package-spoofed variants${NC}"
         echo ""
     fi
 
@@ -665,25 +657,28 @@ main() {
     apply_binary_replacements
     apply_additions
 
+    # Always build the primary Gamehub Lite Mali APK first
+    print_step "Building primary Gamehub Lite Mali APK..."
+    rebuild_apk
+    align_apk
+    sign_apk "$OUTPUT_APK"
+
+    # Provide convenience aliases/copies
+    cp -f "$OUTPUT_APK" "$OUTPUT_DIR/GameHub-Lite.apk" 2>/dev/null || true
+    cp -f "$OUTPUT_APK" "$OUTPUT_DIR/Gamehub-Mali-Plus.apk" 2>/dev/null || true
+    BUILT_APKS="$OUTPUT_APK"
+
     if [ "$RELEASE" = "true" ]; then
-        # Backup manifest for variant builds
+        # Backup clean manifest for spoofed variant builds
         backup_manifest
 
-        # Build all variants (iterate over VARIANTS string)
+        # Build spoofed variants for Mali thermal/power throttling bypass
         for pair in $VARIANTS; do
             local variant="${pair%%:*}"
-            build_variant "$variant"
+            if [ "$variant" != "base" ] && [ "$variant" != "normal" ]; then
+                build_variant "$variant" || true
+            fi
         done
-    else
-        # Standard single build (uses normal com.Gamehub.Mali package)
-        local normal_pkg=$(get_variant_package "normal")
-        if [ -n "$normal_pkg" ]; then
-            replace_package_name "$normal_pkg"
-        fi
-        rebuild_apk
-        align_apk
-        sign_apk "$OUTPUT_APK"
-        BUILT_APKS="$OUTPUT_APK"
     fi
 
     cleanup

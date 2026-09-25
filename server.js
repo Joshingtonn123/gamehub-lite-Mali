@@ -13,7 +13,7 @@ let logoMime = 'image/webp';
 const possibleLogoPaths = [
   { path: path.join(__dirname, 'patches/binary_replacements/res/mipmap-xxxhdpi/ic_launcher.webp'), mime: 'image/webp' },
   { path: path.join(__dirname, 'patches/binary_replacements/res/mipmap-xxhdpi/ic_launcher.webp'), mime: 'image/webp' },
-  { path: path.join(__dirname, 'src/assets/images/gamehub_mali_user_logo_1789756065331.jpg'), mime: 'image/jpeg' }
+  { path: path.join(__dirname, 'patches/binary_replacements/res/mipmap-xxhdpi/ic_launcher.webp'), mime: 'image/jpeg' }
 ];
 
 for (const p of possibleLogoPaths) {
@@ -29,7 +29,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gamehub Mali+ (1.0 Alpha)</title>
+  <title>Gamehub Lite Mali (5.1.0-mali)</title>
   <link rel="icon" type="image/png" href="/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -567,9 +567,9 @@ const HTML_CONTENT = `<!DOCTYPE html>
   <header>
     <div class="nav-container">
       <a href="/" class="brand">
-        <img src="/logo.png" alt="Gamehub Mali+ Logo" class="brand-logo" onerror="this.style.display='none'">
+        <img src="/logo.png" alt="Gamehub Lite Mali Logo" class="brand-logo" onerror="this.style.display='none'">
         <div class="brand-text">
-          <h1>Gamehub Mali+ <span class="badge-pill">v1.0 Alpha</span></h1>
+          <h1>Gamehub Lite Mali <span class="badge-pill">v5.1.0-mali</span></h1>
           <div class="brand-sub">Mali GPU Edition &bull; Frame Generation Suite</div>
         </div>
       </a>
@@ -582,7 +582,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 
   <main>
     <section class="hero-banner">
-      <img src="/logo.png" alt="Gamehub Mali+ Icon" class="hero-logo-large" onerror="this.style.display='none'">
+      <img src="/logo.png" alt="Gamehub Lite Mali Icon" class="hero-logo-large" onerror="this.style.display='none'">
       <div class="hero-text">
         <h2>Optimized GameHub Edition for Mali &amp; Dimensity</h2>
         <p>
@@ -729,7 +729,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       </div>
       <p class="control-desc">
         Mali and MediaTek devices apply aggressive thermal throttles to standard emulators. 
-        Gamehub Mali+ builds multiple spoofed APK signatures to trigger vendor high-performance game boost modes:
+        Gamehub Lite Mali builds multiple spoofed APK signatures to trigger vendor high-performance game boost modes:
       </p>
 
       <div class="variant-list">
@@ -737,7 +737,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
           <div class="variant-left">
             <div class="variant-icon">NORMAL</div>
             <div>
-              <div class="variant-title">Gamehub-Mali-Plus.apk</div>
+              <div class="variant-title">Gamehub-Lite-Mali.apk</div>
               <div class="variant-desc">Normal package &bull; com.Gamehub.Mali</div>
             </div>
           </div>
@@ -748,7 +748,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
           <div class="variant-left">
             <div class="variant-icon">ANTUTU</div>
             <div>
-              <div class="variant-title">Gamehub-Mali-Plus-v1.0-Alpha-antutu.apk</div>
+              <div class="variant-title">Gamehub-Lite-Mali-v1.0-Alpha-antutu.apk</div>
               <div class="variant-desc">AnTuTu benchmark spoof &bull; com.antutu.ABenchMark (triggers max Mali GPU clocks)</div>
             </div>
           </div>
@@ -759,7 +759,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
           <div class="variant-left">
             <div class="variant-icon">ALT-ANTUTU</div>
             <div>
-              <div class="variant-title">Gamehub-Mali-Plus-v1.0-Alpha-alt-antutu.apk</div>
+              <div class="variant-title">Gamehub-Lite-Mali-v1.0-Alpha-alt-antutu.apk</div>
               <div class="variant-desc">Alt AnTuTu benchmark spoof &bull; com.antutu.benchmark.full</div>
             </div>
           </div>
@@ -770,7 +770,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
           <div class="variant-left">
             <div class="variant-icon">GENSHIN</div>
             <div>
-              <div class="variant-title">Gamehub-Mali-Plus-v1.0-Alpha-genshin.apk</div>
+              <div class="variant-title">Gamehub-Lite-Mali-v1.0-Alpha-genshin.apk</div>
               <div class="variant-desc">Genshin Impact spoof &bull; com.miHoYo.GenshinImpact (sustained power limits on Dimensity &amp; Exynos)</div>
             </div>
           </div>
@@ -781,7 +781,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
   </main>
 
   <footer>
-    Gamehub Mali+ Edition (v1.0 Alpha) &bull; Built for MediaTek Dimensity, Exynos Mali &amp; Arm Immortalis Architectures
+    Gamehub Lite Mali Edition (v5.1.0-mali) &bull; Built for MediaTek Dimensity, Exynos Mali &amp; Arm Immortalis Architectures
   </footer>
 
   <script>
@@ -896,7 +896,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 const server = http.createServer((req, res) => {
   const url = req.url || '/';
 
-  // Serve custom Gamehub Mali+ logo
+  // Serve custom Gamehub Lite Mali logo
   if (url === '/logo.png' || url === '/favicon.ico') {
     if (logoBuffer) {
       res.writeHead(200, {
@@ -916,8 +916,8 @@ const server = http.createServer((req, res) => {
   if (url === '/api/status') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
-      name: 'Gamehub Mali+',
-      version: '1.0-alpha',
+      name: 'Gamehub Lite Mali',
+      version: '5.1.0-mali',
       devServer: 'running',
       port: PORT,
       framegen: {
@@ -934,7 +934,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Default: Serve interactive Gamehub Mali+ Web Portal
+  // Default: Serve interactive Gamehub Lite Mali Web Portal
   res.writeHead(200, {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-cache'
@@ -943,5 +943,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`[Gamehub Mali+] Dev server running on http://0.0.0.0:${PORT}`);
+  console.log(`[Gamehub Lite Mali] Dev server running on http://0.0.0.0:${PORT}`);
 });

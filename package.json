@@ -1,7 +1,7 @@
 {
-  "name": "gamehub-mali-plus",
-  "version": "1.0.0-alpha",
-  "description": "Gamehub Mali+ (1.0 Alpha) - Optimized GameHub edition for Mali GPUs",
+  "name": "gamehub-lite-mali",
+  "version": "5.1.0-mali",
+  "description": "Gamehub Lite Mali - Optimized GameHub Lite edition for Mali GPUs with package spoofing and hardware-tuned presets",
   "private": true,
   "type": "module",
   "scripts": {

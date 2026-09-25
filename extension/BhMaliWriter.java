@@ -22,7 +22,7 @@ public class BhMaliWriter {
 
     private static void writeDxvkConfig(File filesDir, BhMaliSettings s) {
         StringBuilder sb = new StringBuilder();
-        sb.append("# Gamehub Mali+ Optimized Configuration\n");
+        sb.append("# Gamehub Lite Mali Optimized Configuration\n");
         sb.append("dxvk.enableAsync = ").append(s.dxvkAsync ? "True" : "False").append("\n");
         sb.append("dxvk.numCompilerThreads = ").append(s.compilerThreads).append("\n");
         sb.append("d3d11.maxTessFactor = ").append(s.maxTessFactor).append("\n");

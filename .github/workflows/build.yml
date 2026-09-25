@@ -1,4 +1,4 @@
-name: Build Gamehub Mali+ APKs (All Variants)
+name: Build Gamehub Lite Mali APKs
 
 on:
   workflow_dispatch:
@@ -96,24 +96,20 @@ jobs:
           ls -la ext_dex/classes.dex
           echo "EXTENSION_DEX_PATH=$GITHUB_WORKSPACE/ext_dex/classes.dex" >> "$GITHUB_ENV"
 
-      - name: Build Gamehub Mali+ APKs (All Variants)
+      - name: Build Gamehub Lite Mali APKs
         run: |
           chmod +x *.sh || true
           RELEASE=true bash ./patch.sh
-          # Ensure base APK is accessible as both versioned and unversioned
-          if [ -f "output/Gamehub-Mali-Plus-v1.0-Alpha.apk" ] && [ ! -f "output/Gamehub-Mali-Plus.apk" ]; then
-            cp -f output/Gamehub-Mali-Plus-v1.0-Alpha.apk output/Gamehub-Mali-Plus.apk
-          fi
 
       - name: List Generated APK Variants
         run: |
           echo "Generated APK files:"
           ls -lah output/
 
-      - name: Upload Gamehub Mali+ APK Artifacts
+      - name: Upload Gamehub Lite Mali APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Gamehub-Mali-Plus-APKs
+          name: Gamehub-Lite-Mali-APKs
           path: output/*.apk
           retention-days: 30
           if-no-files-found: error

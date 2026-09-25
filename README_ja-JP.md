@@ -1,10 +1,10 @@
-# Gamehub Mali+ (v1.0 Alpha)
+# Gamehub Lite Mali (v5.1.0-mali)
 
 **Language:** [English](./README.md) | **日本語**
 
-## Gamehub Mali+とは何ですか？
+## Gamehub Lite Maliとは何ですか？
 
-Gamehub Mali+は、Mali GPU（MediaTek Dimensity、Samsung Exynos Mali、Arm Immortalis）に特化した、高パフォーマンスなコミュニティ版GameHubです。低オーバーヘッドなPCエミュレーションとスムーズなゲーミングのために最適化されています。
+Gamehub Lite Maliは、Mali GPU（MediaTek Dimensity、Samsung Exynos Mali、Arm Immortalis）に特化した、高パフォーマンスなコミュニティ版GameHubです。低オーバーヘッドなPCエミュレーションとスムーズなゲーミングのために最適化されています。
 
 ---
 
@@ -68,7 +68,7 @@ stop using windows
 3. 出力されたAPKをインストール:
 
 ```bash
-adb install output/Gamehub-Mali-Plus.apk
+adb install output/Gamehub-Lite-Mali.apk
 ```
 
 #### カスタムキーストアの使い方
@@ -99,7 +99,7 @@ keytool -list -keystore ./keystore/release.keystore
 
 #### ビルドのリリースバリアント
 
-Gamehub Mali+は、特定のデバイスのパフォーマンス最適化を可能にするために、複数のパッケージ名バリアントのリリースバージョンで配布しています。
+Gamehub Lite Maliは、特定のデバイスのパフォーマンス最適化を可能にするために、複数のパッケージ名バリアントのリリースバージョンで配布しています。
 
 すべてのバリアントを一度にビルドするには`RELEASE=true`フラグを使用します:
 
@@ -115,10 +115,10 @@ KEY_ALIAS="your_key_alias" \
 
 | バリアント    | ファイル名                                     | パッケージ名                |
 | ---------- | -------------------------------------------- | --------------------------- |
-| Normal     | `Gamehub-Mali-Plus-v{VERSION}.apk`           | `com.Gamehub.Mali`          |
-| AnTuTu     | `Gamehub-Mali-Plus-v{VERSION}-antutu.apk`    | `com.antutu.ABenchMark`     |
-| Alt-AnTuTu | `Gamehub-Mali-Plus-v{VERSION}-alt-antutu.apk`| `com.antutu.benchmark.full` |
-| Genshin    | `Gamehub-Mali-Plus-v{VERSION}-genshin.apk`   | `com.miHoYo.GenshinImpact`  |
+| Normal     | `Gamehub-Lite-Mali-v{VERSION}.apk`           | `gamehub.lite`          |
+| AnTuTu     | `Gamehub-Lite-Mali-v{VERSION}-antutu.apk`    | `com.antutu.benchmark`     |
+| Alt-AnTuTu | `Gamehub-Lite-Mali-v{VERSION}-alt-antutu.apk`| `com.antutu.benchmark.full` |
+| Genshin    | `Gamehub-Lite-Mali-v{VERSION}-genshin.apk`   | `com.mihoyo.genshinimpact`  |
 
 バージョン番号は、ソースAPKから自動抽出されます。
 
@@ -194,7 +194,7 @@ patches/
 1. Lite APKを手動でデコンパイル:
 
    ```bash
-   apktool d apk/Gamehub-Mali-Plus.apk -o work/lite
+   apktool d apk/Gamehub-Lite-Mali.apk -o work/lite
    ```
 
 2. `work/lite/`内のファイルに変更を追加します

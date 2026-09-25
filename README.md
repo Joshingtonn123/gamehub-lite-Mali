@@ -1,10 +1,10 @@
-# Gamehub Mali+ (v1.0 Alpha)
+# Gamehub Lite Mali (v5.1.0-mali)
 
 **Language:** **English** | [日本語](./README_ja-JP.md)
 
-## What is Gamehub Mali+?
+## What is Gamehub Lite Mali?
 
-Gamehub Mali+ is a specialized, high-performance community edition of GameHub built specifically for **Mali GPUs** (MediaTek Dimensity, Samsung Exynos Mali, Arm Immortalis) and optimized for low-overhead PC emulation and smooth gaming.
+Gamehub Lite Mali is a specialized, high-performance community edition of GameHub built specifically for **Mali GPUs** (MediaTek Dimensity, Samsung Exynos Mali, Arm Immortalis) and optimized for low-overhead PC emulation and smooth gaming.
 
 ---
 
@@ -81,7 +81,7 @@ stop using windows
 3. Install the output APK:
 
 ```bash
-adb install output/Gamehub-Mali-Plus.apk
+adb install output/Gamehub-Lite-Mali.apk
 ```
 
 #### How to use your custom keystore
@@ -129,10 +129,10 @@ This will generate the following APKs in the `output/` directory:
 
 | Variant        | Filename                                         | Package Name                |
 | -------------- | ------------------------------------------------ | --------------------------- |
-| Normal         | `Gamehub-Mali-Plus-v{VERSION}.apk`               | `com.Gamehub.Mali`          |
-| Antutu         | `Gamehub-Mali-Plus-v{VERSION}-antutu.apk`        | `com.antutu.ABenchMark`     |
-| Alt Antutu     | `Gamehub-Mali-Plus-v{VERSION}-alt-antutu.apk`    | `com.antutu.benchmark.full` |
-| Genshin spoof  | `Gamehub-Mali-Plus-v{VERSION}-genshin.apk`       | `com.miHoYo.GenshinImpact`  |
+| Normal         | `Gamehub-Lite-Mali-v{VERSION}.apk`               | `gamehub.lite`          |
+| Antutu         | `Gamehub-Lite-Mali-v{VERSION}-antutu.apk`        | `com.antutu.benchmark`     |
+| Alt Antutu     | `Gamehub-Lite-Mali-v{VERSION}-alt-antutu.apk`    | `com.antutu.benchmark.full` |
+| Genshin spoof  | `Gamehub-Lite-Mali-v{VERSION}-genshin.apk`       | `com.mihoyo.genshinimpact`  |
 
 The version number is automatically extracted from the source APK.
 
@@ -208,7 +208,7 @@ patches/
 1. Decompile the Lite APK manually:
 
    ```bash
-   apktool d apk/Gamehub-Mali-Plus.apk -o work/lite
+   apktool d apk/Gamehub-Lite-Mali.apk -o work/lite
    ```
 
 2. Make your changes to files in `work/lite/`
