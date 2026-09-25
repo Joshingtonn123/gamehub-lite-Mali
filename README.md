@@ -81,7 +81,7 @@ stop using windows
 3. Install the output APK:
 
 ```bash
-adb install output/GameHub-Lite.apk
+adb install output/Gamehub-Mali-Plus.apk
 ```
 
 #### How to use your custom keystore
@@ -208,7 +208,7 @@ patches/
 1. Decompile the Lite APK manually:
 
    ```bash
-   apktool d apk/GameHub-Lite.apk -o work/lite
+   apktool d apk/Gamehub-Mali-Plus.apk -o work/lite
    ```
 
 2. Make your changes to files in `work/lite/`

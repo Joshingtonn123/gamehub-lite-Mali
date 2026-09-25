@@ -1,10 +1,10 @@
-# GameHub Lite
+# Gamehub Mali+ (v1.0 Alpha)
 
 **Language:** [English](./README.md) | **日本語**
 
-## GameHub Liteとは何ですか？
+## Gamehub Mali+とは何ですか？
 
-GameHub Liteは、教育目的のためにコミュニティによって維持と管理されているGameHubの改良版です。
+Gamehub Mali+は、Mali GPU（MediaTek Dimensity、Samsung Exynos Mali、Arm Immortalis）に特化した、高パフォーマンスなコミュニティ版GameHubです。低オーバーヘッドなPCエミュレーションとスムーズなゲーミングのために最適化されています。
 
 ---
 
@@ -68,7 +68,7 @@ stop using windows
 3. 出力されたAPKをインストール:
 
 ```bash
-adb install output/GameHub-Lite.apk
+adb install output/Gamehub-Mali-Plus.apk
 ```
 
 #### カスタムキーストアの使い方
@@ -99,9 +99,9 @@ keytool -list -keystore ./keystore/release.keystore
 
 #### ビルドのリリースバリアント
 
-GameHub Liteは、特定のデバイスのパフォーマンス最適化を可能にするために、複数のパッケージ名バリアントのリリースバージョンで配布しています。詳細は[GameHub Liteの異なるバージョン](#異なるバージョンについて)を参照してください。
+Gamehub Mali+は、特定のデバイスのパフォーマンス最適化を可能にするために、複数のパッケージ名バリアントのリリースバージョンで配布しています。
 
-5つのバリアントすべてを一度にビルドするには`RELEASE=true`フラグを使用します:
+すべてのバリアントを一度にビルドするには`RELEASE=true`フラグを使用します:
 
 ```bash
 RELEASE=true \
@@ -113,13 +113,12 @@ KEY_ALIAS="your_key_alias" \
 
 `output/`ディレクトリに以下のAPKファイルが生成されます:
 
-| バリアント    | ファイル名                                 | パッケージ名                |
-| ---------- | ---------------------------------------- | --------------------------- |
-| Base       | `GameHub-Lite-v{バージョン}.apk`            | `gamehub.lite`              |
-| AnTuTu     | `GameHub-Lite-v{バージョン}-antutu.apk`     | `com.antutu.ABenchMark`     |
-| Alt-AnTuTu | `GameHub-Lite-v{バージョン}-alt-antutu.apk` | `com.antutu.benchmark.full` |
-| Ludashi    | `GameHub-Lite-v{バージョン}-ludashi.apk`    | `com.ludashi.aibench`       |
-| PUBG       | `GameHub-Lite-v{バージョン}-pubg.apk`       | `com.tencent.ig`            |
+| バリアント    | ファイル名                                     | パッケージ名                |
+| ---------- | -------------------------------------------- | --------------------------- |
+| Normal     | `Gamehub-Mali-Plus-v{VERSION}.apk`           | `com.Gamehub.Mali`          |
+| AnTuTu     | `Gamehub-Mali-Plus-v{VERSION}-antutu.apk`    | `com.antutu.ABenchMark`     |
+| Alt-AnTuTu | `Gamehub-Mali-Plus-v{VERSION}-alt-antutu.apk`| `com.antutu.benchmark.full` |
+| Genshin    | `Gamehub-Mali-Plus-v{VERSION}-genshin.apk`   | `com.miHoYo.GenshinImpact`  |
 
 バージョン番号は、ソースAPKから自動抽出されます。
 
@@ -195,7 +194,7 @@ patches/
 1. Lite APKを手動でデコンパイル:
 
    ```bash
-   apktool d apk/GameHub-Lite.apk -o work/lite
+   apktool d apk/Gamehub-Mali-Plus.apk -o work/lite
    ```
 
 2. `work/lite/`内のファイルに変更を追加します
