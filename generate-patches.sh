@@ -19,7 +19,12 @@ DECOMPILED_DIR="$SCRIPT_DIR/decompiled"
 PATCHES_DIR="$SCRIPT_DIR/patches"
 
 ORIGINAL_APK="${1:-$SCRIPT_DIR/apk/GameHub-5.1.0.apk}"
-LITE_APK="${2:-$SCRIPT_DIR/apk/GameHub-Lite.apk}"
+LITE_APK="${2:-$SCRIPT_DIR/output/GameHub-Mali.apk}"
+if [ ! -f "$LITE_APK" ] && [ -f "$SCRIPT_DIR/output/GameHub-Lite.apk" ]; then
+    LITE_APK="$SCRIPT_DIR/output/GameHub-Lite.apk"
+elif [ ! -f "$LITE_APK" ] && [ -f "$SCRIPT_DIR/apk/GameHub-Lite.apk" ]; then
+    LITE_APK="$SCRIPT_DIR/apk/GameHub-Lite.apk"
+fi
 
 print_step() {
     echo -e "${BLUE}==>${NC} $1"

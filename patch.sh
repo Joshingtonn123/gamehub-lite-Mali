@@ -33,14 +33,17 @@ KEY_ALIAS="${KEY_ALIAS:-androiddebugkey}"
 # Release mode: set RELEASE=true to build all package variants
 RELEASE="${RELEASE:-false}"
 
-# Version for output filenames (set to 5.1.0-mali for Gamehub Lite Mali)
+# Version for output filenames (set to 5.1.0-mali for GameHub Mali)
 VERSION="${VERSION:-5.1.0-mali}"
 
 # Base package name used in patches
 BASE_PACKAGE="gamehub.lite"
 
+# Normal target package name
+NORMAL_PACKAGE="${NORMAL_PACKAGE:-com.GameHub.Mali}"
+
 # Package spoofing variants for Mali / MediaTek / Exynos thermal & governor bypass
-VARIANTS="base:gamehub.lite ludashi:com.ludashi.benchmark antutu:com.antutu.benchmark genshin:com.mihoyo.genshinimpact"
+VARIANTS="normal:com.GameHub.Mali base:gamehub.lite ludashi:com.ludashi.benchmark antutu:com.antutu.benchmark genshin:com.mihoyo.genshinimpact"
 
 # Get package name for a variant
 get_variant_package() {
@@ -53,12 +56,12 @@ get_variant_package() {
             return 0
         fi
     done
-    echo "gamehub.lite"
+    echo "com.GameHub.Mali"
 }
 
 # Source APK (can be overridden)
 SOURCE_APK="${1:-$SCRIPT_DIR/apk/GameHub-5.1.0.apk}"
-OUTPUT_APK="$OUTPUT_DIR/Gamehub-Lite-Mali.apk"
+OUTPUT_APK="$OUTPUT_DIR/GameHub-Mali.apk"
 
 print_step() {
     echo -e "${BLUE}==>${NC} $1"
@@ -146,9 +149,9 @@ get_output_filename() {
     local variant="$1"
 
     if [ "$variant" = "base" ] || [ "$variant" = "normal" ]; then
-        echo "$OUTPUT_DIR/Gamehub-Lite-Mali.apk"
+        echo "$OUTPUT_DIR/GameHub-Mali.apk"
     else
-        echo "$OUTPUT_DIR/Gamehub-Lite-Mali-spoofed-${variant}.apk"
+        echo "$OUTPUT_DIR/GameHub-Mali-spoofed-${variant}.apk"
     fi
 }
 
@@ -602,7 +605,7 @@ cleanup() {
 show_result() {
     echo ""
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}  Gamehub Lite Mali build complete!${NC}"
+    echo -e "${GREEN}  GameHub Mali build complete!${NC}"
     echo -e "${GREEN}========================================${NC}"
     echo ""
 
@@ -635,7 +638,7 @@ BUILT_APKS=""
 main() {
     echo ""
     echo "====================================="
-    echo "  Gamehub Lite Mali Patcher"
+    echo "  GameHub Mali Patcher"
     echo "====================================="
     echo ""
 
@@ -657,14 +660,20 @@ main() {
     apply_binary_replacements
     apply_additions
 
-    # Always build the primary Gamehub Lite Mali APK first
-    print_step "Building primary Gamehub Lite Mali APK..."
+    # Always rename normal package to com.GameHub.Mali as requested
+    if [ -n "$NORMAL_PACKAGE" ] && [ "$NORMAL_PACKAGE" != "$BASE_PACKAGE" ]; then
+        replace_package_name "$NORMAL_PACKAGE"
+    fi
+
+    # Always build the primary GameHub Mali APK first
+    print_step "Building primary GameHub Mali APK ($NORMAL_PACKAGE)..."
     rebuild_apk
     align_apk
     sign_apk "$OUTPUT_APK"
 
-    # Provide convenience aliases/copies
+    # Provide convenience aliases/copies for build workflows and tests
     cp -f "$OUTPUT_APK" "$OUTPUT_DIR/GameHub-Lite.apk" 2>/dev/null || true
+    cp -f "$OUTPUT_APK" "$OUTPUT_DIR/Gamehub-Lite-Mali.apk" 2>/dev/null || true
     cp -f "$OUTPUT_APK" "$OUTPUT_DIR/Gamehub-Mali-Plus.apk" 2>/dev/null || true
     BUILT_APKS="$OUTPUT_APK"
 
